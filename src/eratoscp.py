@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -tt
 #
 # main.py
 # Copyright (C) Viswanath S, Sriram G 2010 <viswanathgs@gmail.com, sriram137@gmail.com>
@@ -17,4 +17,12 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-print "Hello World!"
+import sys
+import gtk
+import pygtk
+import mainwindow
+	
+if __name__ == '__main__':
+	eratoscp = mainwindow.EratoSCP()	
+	eratoscp.window.show()
+	gtk.main()
