@@ -150,9 +150,12 @@
         <child>
           <object class="GtkHBox" id="hbox_remotelogin">
             <property name="visible">True</property>
+            <property name="border_width">5</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkVBox" id="vbox_host">
                 <property name="visible">True</property>
+                <property name="border_width">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label_host">
@@ -175,12 +178,15 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox_port">
                 <property name="visible">True</property>
+                <property name="border_width">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label_port">
@@ -196,6 +202,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
+                    <property name="text" translatable="yes">22</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -203,12 +210,15 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox_username">
                 <property name="visible">True</property>
+                <property name="border_width">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label_username">
@@ -231,12 +241,15 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
                 <property name="position">2</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox_password">
                 <property name="visible">True</property>
+                <property name="border_width">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label_password">
@@ -260,12 +273,15 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
                 <property name="position">3</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox_remote">
                 <property name="visible">True</property>
+                <property name="border_width">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label_remote">
@@ -314,17 +330,24 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
                 <property name="position">4</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">5</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
+            <property name="border_width">10</property>
+            <property name="spacing">15</property>
             <child>
               <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
@@ -332,17 +355,21 @@
                 <child>
                   <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
+                    <property name="border_width">5</property>
+                    <property name="spacing">3</property>
                     <child>
-                      <object class="GtkLabel" id="label_source">
+                      <object class="GtkLabel" id="label_host_path">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Source:</property>
+                        <property name="label" translatable="yes">Host Path:</property>
                       </object>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="entry_source_path">
+                      <object class="GtkEntry" id="entry_host_path">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
@@ -353,12 +380,15 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFileChooserWidget" id="filechooserwidget_source">
+                  <object class="GtkFileChooserWidget" id="filechooserwidget_host">
                     <property name="visible">True</property>
+                    <signal name="selection_changed" handler="on_filechooserwidget_host_selection_changed"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -376,17 +406,21 @@
                 <child>
                   <object class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
+                    <property name="border_width">5</property>
+                    <property name="spacing">3</property>
                     <child>
-                      <object class="GtkLabel" id="label_destination">
+                      <object class="GtkLabel" id="label_remote_path">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Destination:</property>
+                        <property name="label" translatable="yes">Remote Path:</property>
                       </object>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="entry_destination_path">
+                      <object class="GtkEntry" id="entry_remote_path">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
@@ -397,17 +431,13 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFileChooserWidget" id="filechooserwidget_destination">
-                    <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
+                  <placeholder/>
                 </child>
               </object>
               <packing>
@@ -416,16 +446,81 @@
             </child>
           </object>
           <packing>
+            <property name="padding">15</property>
             <property name="position">2</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button_copy">
-            <property name="label" translatable="yes">Initiate Copy</property>
+          <object class="GtkVBox" id="vbox4">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="on_button_copy_clicked"/>
+            <property name="orientation">vertical</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox4">
+                <property name="visible">True</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_initiate_copy">
+                    <property name="label" translatable="yes">Initiate Copy</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="border_width">10</property>
+                    <signal name="clicked" handler="on_button_initiate_copy_clicked"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">10</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_abort_copy">
+                    <property name="label" translatable="yes">Abort Copy</property>
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="border_width">10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">10</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_quit_erato">
+                    <property name="label" translatable="yes">Quit EratoSCP</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="border_width">10</property>
+                    <signal name="clicked" handler="on_button_quit_erato_clicked"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">10</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
