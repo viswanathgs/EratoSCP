@@ -4,6 +4,10 @@ import commands
 import paramiko
 
 def validate_port(port):
+	'''
+		Returns (True, port number in int) if the entered port is valid.
+	'''
+	
 	valid_port = True
 	if port == '':
 		port = 22	
@@ -13,66 +17,89 @@ def validate_port(port):
 		port = int(port)
 	return (port, valid_port)
 		
-def is_valid_path(path, remote, host, port, username, password):
+def validate_local(path):
 	'''
-		Given a path, returs True is the path if valid and False if
-		no such file or directory exists
+		Returns a tuple (valid_path, directory).
+		valid_path = True, if the local path exists.
+		directory = True, if the path is a directory.
 	'''
 
-	if remote:
-		ssh = paramiko.SSHClient()
-		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		ssh.connect(host, port=int(port), username=username, password=password)
-		(stdin, stdout, stderr) = ssh.exec_command('ls ' + path)
-		longlist = stderr.read().splitlines()
-	else:
-		(status, output) = commands.getstatusoutput('ls ' + path)
-		longlist = output.splitlines()
-
-	if len(longlist) > 0 and longlist[0].find('No such file or directory') != -1:
-		print 'Error ', path
-		return False
-
-	return True
-		
-
-def is_directory(path, remote, host, port, username, password):
-	'''
-		Given a path, returns True if it points to a directory and False 
-		if it points to a file.
-		Done by checking for '-' or 'd' in the long list by executing 
-		ls -l.
-	'''
+	if path == '/':
+		return (True, True)
 	
+	(status, output) = commands.getstatusoutput('ls ' + path)
+	longlist = output.splitlines()
+
+	valid_path = True
+	directory = False
+	if len(longlist) > 0 and longlist[0].find('No such file or directory') != -1:
+		valid_path = False
+		return (valid_path, False)
+
 	path_dirname = os.path.dirname(path)
 	path_basename = os.path.basename(path)
-
-	if remote:
-		ssh = paramiko.SSHClient()
-		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		ssh.connect(host, port=int(port), username=username, password=password)
-		(stdin, stdout, stderr) = ssh.exec_command('ls -l ' + path_dirname)
-		longlist = stdout.read().splitlines()
-	else:
-		(status, output) = commands.getstatusoutput('ls -l ' + path_dirname)
-		longlist = output.splitlines()
+	
+	(status, output) = commands.getstatusoutput('ls -l ' + path_dirname)
+	longlist = output.splitlines()
 	longlist = longlist[1:]
-
-	valid = False
-	directory = False
 
 	for line in longlist:
 		linelist = line.split()
 		if linelist[-1] == path_basename:
-			valid = True
 			if linelist[0][0] == '-':
 				directory = False
 			elif linelist[0][0] == 'd':
 				directory = True
 			break
 
-	if not valid:
-		print 'Error: Path could not be categorized'
-		return
+	return (valid_path, directory)
 
-	return directory
+def validate_remote(path, host, port, username, password):
+	'''
+		Returns a tuple(connection_error, valid_path, directory).
+		connection_error = '', if ssh connection is successfully established.
+		connection_error = <Error Message>, if connection could not be established.
+		valid_path = True, if the remote path exists.
+		directory = True, if the path is a directory.
+	'''
+	
+	ssh = paramiko.SSHClient()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+	connection_error = ''
+	valid_path = True
+	directory = False
+	
+	try:
+		ssh.connect(host, port=int(port), username=username, password=password)
+	except Exception as msg:
+		connection_error = msg
+		return (connection_error, False, False)
+
+	if path == '/':
+		return (connection_error, True, True)
+	
+	(stdin, stdout, stderr) = ssh.exec_command('ls ' + path)
+	longlist = stderr.read().splitlines()
+
+	if len(longlist) > 0 and longlist[0].find('No such file or directory') != -1:
+		valid_path = False
+		return (connection_error, valid_path, False)
+
+	path_dirname = os.path.dirname(path)
+	path_basename = os.path.basename(path)
+
+	(stdin, stdout, stderr) = ssh.exec_command('ls -l ' + path_dirname)
+	longlist = stdout.read().splitlines()
+	longlist = longlist[1:]
+
+	for line in longlist:
+		linelist = line.split()
+		if linelist[-1] == path_basename:
+			if linelist[0][0] == '-':
+				directory = False
+			elif linelist[0][0] == 'd':
+				directory = True
+			break
+
+	return (connection_error, valid_path, directory)

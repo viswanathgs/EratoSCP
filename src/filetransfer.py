@@ -6,7 +6,7 @@ import validate
 
 class FileCopier:
 	
-	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote):
+	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory):
 		login = username + '@' + host + ':'
 		source = source_path
 		destination = destination_path
@@ -21,7 +21,7 @@ class FileCopier:
 		if port != 22:
 			options += '-P 22 '
 
-		if validate.is_directory(source_path, source_remote, host, port, username, password):
+		if copy_entire_directory:
 			options += '-r '
 			
 ##		Running scp command with subprocess module
@@ -57,7 +57,6 @@ class FileCopier:
 			self.copychild.sendline(password)
 
 		self.copychild.expect(pexpect.EOF, timeout=None)
-		print 'Done copying'
 		print self.copychild.before
 
 	def __init__(self):

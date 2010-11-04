@@ -30,7 +30,7 @@ class EratoSCP:
 		if local_uri == None:
 			return
 		
-		#To remove the preceeding file:// in host_uri
+#		To remove the preceeding file:// in host_uri
 		if local_uri.find('file://') == 0:
 			local_uri = local_uri[7:]
 		self.entry_local_path.set_text(local_uri)
@@ -50,31 +50,48 @@ class EratoSCP:
 		remote_path = self.entry_remote_path.get_text()
 		source_remote = self.radio_source.get_active()
 
-		print 'Validating paths...'
-		if not validate.is_valid_path(local_path, False, host, port, username, password):
+#		Removing '/' at the end of the path to avoid os.path.basename() from
+#		returning empty string
+		if local_path != '/' and local_path[-1] == '/':
+			local_path = local_path[:-1]
+		if remote_path != '/' and remote_path[-1] == '/':
+			remote_path = remote_path[:-1]
+
+		print 'Validating local path...'
+		(valid_path_local, directory_local) = validate.validate_local(local_path)
+
+		if not valid_path_local:
 			print 'Error: Local path does not exist'
 			return
-		
-		if not validate.is_valid_path(remote_path, True, host, port, username, password):
+
+		print 'Establishing connection and validating remote path...'
+		(connection_error, valid_path_remote, directory_remote) = validate.validate_remote(remote_path, host, port, username, password)
+
+		if connection_error:
+			print 'Error: ',
+			print connection_error
+			return
+
+		if not valid_path_remote:
 			print 'Error: Remote path does not exist'
 			return
 
 		if source_remote:
 			source_path = remote_path
 			destination_path = local_path
+			copy_entire_directory = directory_remote
+			if not directory_local:
+				print 'Error: Destination path is not a directory'
+				return
 		else:
 			source_path = local_path
 			destination_path = remote_path
-			
-#		print 'host = ', host, ' port = ', port, ' username = ', username,
-#		print 'password = ', password, 'source_path = ', source_path,
-#		print 'destination_path = ', destination_path, 'source_remote = ', source_remote
-	
-#		valid_paths = validate.validate_paths(host, port, username, password, source_path, destination_path, source_remote)
-#		if not valid_paths:
-#			print 'The entered source/destination path is not valid'
+			copy_entire_directory = directory_local
+			if not directory_remote:
+				print 'Error: Destination path is not a directory'
+				return
 
-		self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote)
+		self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory)
 		
 	def set_button_sensitivity(self, initiate_copy_button, abort_copy_button, copy_in_progress):
 		initiate_copy_button.set_sensitive(copy_in_progress)
@@ -100,16 +117,5 @@ class EratoSCP:
 		self.local_file_chooser = self.builder.get_object('filechooserwidget_local')
 
 		self.filecopier = filetransfer.FileCopier()
-
-#		try:
-#			copychild
-#		except NameError:
-#			self.set_button_sensitivity(self.initiate_copy_button, self.abort_copy_button, True)
-#		else:
-#			if self.copychild.isalive():
-#				print 'gotcha'
-#				self.set_button_sensitivity(self.initiate_copy_button, self.abort_copy_button, False)
-#			else:
-#				self.set_button_sensitivity(self.initiate_copy_button, self.abort_copy_button, True)
 		
 		self.builder.connect_signals(self)
