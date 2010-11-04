@@ -4,50 +4,62 @@ import pexpect
 import os
 import validate
 
-def initiate_copy(host, port, username, password, source_path, destination_path, source_remote):
-	login = username + '@' + host + ':'
-	source = source_path
-	destination = destination_path
+class FileCopier:
 	
-	if source_remote:
-		source = login + source
-	else:
-		destination = login + destination
-
-	options = ''
-
-	if port != 22:
-		options += '-P 22 '
-
-	if validate.is_directory(source_path):
-		options += '-r '
-##	Running scp command with subprocess module
-
-#	scp_command = ['scp', '-P', str(port), source, destination]
-#	print 'Executing "', ' '.join(scp_command), '"'
-#	scp_proc = subprocess.Popen(scp_command)
-
-##	Running scp command with commands module
-
-#	scp_command = 'scp -P ' + str(port) + ' ' + source + ' ' + destination
-#	print 'Executing "', scp_command, '"'
-#	(status, output) = commands.getstatusoutput(scp_command)
+	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote):
+		login = username + '@' + host + ':'
+		source = source_path
+		destination = destination_path
 	
-#	if status:
-#		print 'Error copying file.'
-#	else:
-#		print 'Transfer complete.'
-#		print output
+		if source_remote:
+			source = login + source
+		else:
+			destination = login + destination
 
-##	Running scp command with pexpect module
+		options = ''
 
-	scp_command = 'scp ' + options + ' ' + source + ' ' + destination
-	print 'Executing "' + scp_command + '"'
+		if port != 22:
+			options += '-P 22 '
+
+		if validate.is_directory(source_path, source_remote, host, port, username, password):
+			options += '-r '
+			
+##		Running scp command with subprocess module
+
+#		scp_command = ['scp', '-P', str(port), source, destination]
+#		print 'Executing "', ' '.join(scp_command), '"'
+#		scp_proc = subprocess.Popen(scp_command)
+
+##		Running scp command with commands module
+
+#		scp_command = 'scp -P ' + str(port) + ' ' + source + ' ' + destination
+#		print 'Executing "', scp_command, '"'
+#		(status, output) = commands.getstatusoutput(scp_command)
+
+#		if status:
+#			print 'Error copying file.'
+#		else:
+#			print 'Transfer complete.'
+#			print output
 	
-	copychild = pexpect.spawn(scp_command)
-	copychild.expect(['.*[pP]assword:\s*', pexpect.EOF])
-	copychild.sendline(password)
-	copychild.expect(pexpect.EOF)
+##		Running scp command with pexpect module
 
-	return copychild
+		scp_command = 'scp ' + options + ' ' + source + ' ' + destination
+		print 'Executing "' + scp_command + '"'
+	
+		self.copychild = pexpect.spawn(scp_command)
+		index = self.copychild.expect(['Are you sure you want to continue connecting (yes/no)?\s*', '.*[pP]assword:\s*'])
+		if index == 0:
+			self.copychild.sendline('yes')
+			self.copychild.expect('.*[pP]assword:\s*')
+			self.copychild.sendline(password)
+		else:
+			self.copychild.sendline(password)
+
+		self.copychild.expect(pexpect.EOF, timeout=None)
+		print 'Done copying'
+		print self.copychild.before
+
+	def __init__(self):
+		self.copychild = None
 	

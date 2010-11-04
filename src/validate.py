@@ -1,6 +1,7 @@
 import os
 import subprocess
 import commands
+import paramiko
 
 def validate_port(port):
 	valid_port = True
@@ -12,19 +13,30 @@ def validate_port(port):
 		port = int(port)
 	return (port, valid_port)
 		
-'''
-def validate_paths(host, port, username, password, source_path, destination_path, source_remote):
-	valid_paths = True
-	
-	if source_remote:
-	else:
-		source = os.path.abspath(source_path)
-		if not os.path.exists(source):
-			valid_paths = False
-		
-'''
+def is_valid_path(path, remote, host, port, username, password):
+	'''
+		Given a path, returs True is the path if valid and False if
+		no such file or directory exists
+	'''
 
-def is_directory(path):
+	if remote:
+		ssh = paramiko.SSHClient()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh.connect(host, port=int(port), username=username, password=password)
+		(stdin, stdout, stderr) = ssh.exec_command('ls ' + path)
+		longlist = stderr.read().splitlines()
+	else:
+		(status, output) = commands.getstatusoutput('ls ' + path)
+		longlist = output.splitlines()
+
+	if len(longlist) > 0 and longlist[0].find('No such file or directory') != -1:
+		print 'Error ', path
+		return False
+
+	return True
+		
+
+def is_directory(path, remote, host, port, username, password):
 	'''
 		Given a path, returns True if it points to a directory and False 
 		if it points to a file.
@@ -35,8 +47,15 @@ def is_directory(path):
 	path_dirname = os.path.dirname(path)
 	path_basename = os.path.basename(path)
 
-	(status, output) = commands.getstatusoutput('ls -l ' + path_dirname)
-	longlist = output.split('\n')
+	if remote:
+		ssh = paramiko.SSHClient()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh.connect(host, port=int(port), username=username, password=password)
+		(stdin, stdout, stderr) = ssh.exec_command('ls -l ' + path_dirname)
+		longlist = stdout.read().splitlines()
+	else:
+		(status, output) = commands.getstatusoutput('ls -l ' + path_dirname)
+		longlist = output.splitlines()
 	longlist = longlist[1:]
 
 	valid = False
