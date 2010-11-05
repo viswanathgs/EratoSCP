@@ -2,10 +2,6 @@ import gtk
 import pygtk
 
 class AboutDialog:
-
-#	def on_about_dialog_close(self, data=None):
-#		print 'here'
-#		self.dialog.destroy()
 	
 	def __init__(self):
 		self.builder = gtk.Builder()
