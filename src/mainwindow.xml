@@ -4,7 +4,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="mainwindow">
     <property name="visible">True</property>
-    <property name="title" translatable="yes">EratoSCP</property>
+    <property name="title" translatable="yes">EratoSCP - A GUI Client for SCP</property>
     <signal name="destroy" handler="on_mainwindow_destroy"/>
     <child>
       <object class="GtkVBox" id="vbox1">
