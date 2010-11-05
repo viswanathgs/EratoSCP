@@ -76,7 +76,7 @@ def validate_remote(path, host, port, username, password):
 		connection_error = msg
 		return (connection_error, False, False)
 
-	if path == '/':
+	if path == '/' or path == '~/':
 		return (connection_error, True, True)
 	
 	(stdin, stdout, stderr) = ssh.exec_command('ls ' + path)

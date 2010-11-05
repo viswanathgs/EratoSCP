@@ -114,9 +114,9 @@ class EratoSCP:
 
 #		Removing '/' at the end of the path to avoid os.path.basename() from
 #		returning empty string
-		if local_path != '/' and local_path[-1] == '/':
+		if local_path != '/' and local_path != '~/' and local_path[-1] == '/':
 			local_path = local_path[:-1]
-		if remote_path != '/' and remote_path[-1] == '/':
+		if remote_path != '/' and remote_path != '~/' and remote_path[-1] == '/':
 			remote_path = remote_path[:-1]
 
 		print 'Validating local path...'
