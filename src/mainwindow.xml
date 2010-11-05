@@ -12,7 +12,6 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="mainwindow_menubar">
-            <property name="visible">True</property>
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
@@ -485,7 +484,6 @@
                 <child>
                   <object class="GtkButton" id="button_abort_copy">
                     <property name="label" translatable="yes">Abort Copy</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="border_width">10</property>

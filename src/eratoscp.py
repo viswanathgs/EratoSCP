@@ -21,8 +21,14 @@ import sys
 import gtk
 import pygtk
 import mainwindow
+import gobject
+
+#gtk.gdk.threads_init()
+gobject.threads_init()
 	
 if __name__ == '__main__':
-	eratoscp = mainwindow.EratoSCP()	
+	eratoscp = mainwindow.EratoSCP()
 	eratoscp.window.show()
+#	gtk.gdk.threads_enter()
 	gtk.main()
+#	gtk.gdk.threads_leave()

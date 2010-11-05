@@ -4,6 +4,8 @@ import sys
 import os
 import validate
 import filetransfer
+import threading
+import gobject
 
 class EratoSCP:
 	
@@ -15,9 +17,9 @@ class EratoSCP:
 
 	def on_button_abort_copy_clicked(self, date=None):
 		print 'Abort copy clicked'
-		if self.filecopier.copychild != None and self.filecopier.copychild.isalive():
-			print 'Stopping copy'
-			self.filecopier.copychild.close()
+#		if self.filecopier.copychild != None and self.filecopier.copychild.isalive():
+#			print 'Stopping copy'
+#			self.filecopier.copychild.close()
 		
 	def on_filechooserwidget_local_selection_changed(self, date=None):
 		'''
@@ -34,8 +36,26 @@ class EratoSCP:
 		if local_uri.find('file://') == 0:
 			local_uri = local_uri[7:]
 		self.entry_local_path.set_text(local_uri)
+
+	def on_button_initiate_copy_clicked(self, date=None):
+		'''
+			Calls initiate_copy() in a separate thread when "Initiate Copy" is
+			clicked.
+		'''
 		
-	def on_button_initiate_copy_clicked(self, data=None):	
+		self.initiate_copy_button.set_sensitive(False)
+		self.initiate_copy_button.set_label("Copying...")
+		self.copythread = threading.Thread(target=self.initiate_copy)
+		self.copythread.start()
+		
+	def initiate_copy(self):	
+		'''
+			Checks for validity of host, port, username, password, source and
+			destination paths, and then initiates copy.
+			To be called in a separate thread so as to not hang GUI gtk main 
+			loop.
+		'''
+		
 		host = self.entry_host.get_text()
 		port = self.entry_port.get_text()
 		username = self.entry_username.get_text()
@@ -92,6 +112,8 @@ class EratoSCP:
 				return
 
 		self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory)
+		gobject.idle_add(self.initiate_copy_button.set_label, "Initiate Copy")
+		gobject.idle_add(self.initiate_copy_button.set_sensitive, True)
 		
 	def set_button_sensitivity(self, initiate_copy_button, abort_copy_button, copy_in_progress):
 		initiate_copy_button.set_sensitive(copy_in_progress)
@@ -117,5 +139,7 @@ class EratoSCP:
 		self.local_file_chooser = self.builder.get_object('filechooserwidget_local')
 
 		self.filecopier = filetransfer.FileCopier()
+
+		self.copythread = None
 		
 		self.builder.connect_signals(self)
