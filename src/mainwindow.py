@@ -16,9 +16,11 @@ class EratoSCP:
 
 	def update_status(self, status):
 		gobject.idle_add(self.textbuffer_status.insert_at_cursor, status + '\n')
-		
-#		end_iter = self.textbuffer_status.get_end_iter()
-#		gobject.idle_add(self.textbuffer_status.place_cursor, end_iter)
+
+#		Scroll to the end of status box text view
+		vadjustment = self.scrolledwindow_status.get_vadjustment()
+		vadjustment.set_value(vadjustment.upper)
+		gobject.idle_add(self.scrolledwindow_status.set_vadjustment, vadjustment)
 	
 	def on_mainwindow_destroy(self, widget, data=None):
 		gtk.main_quit()
@@ -200,6 +202,7 @@ class EratoSCP:
 		self.local_file_chooser = self.builder.get_object('filechooserwidget_local')
 		self.textview_status = self.builder.get_object('textview_status')
 		self.textbuffer_status = self.builder.get_object('textbuffer_status')
+		self.scrolledwindow_status = self.builder.get_object('scrolledwindow_status')
 
 		self.filecopier = filetransfer.FileCopier()
 

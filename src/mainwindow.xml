@@ -510,7 +510,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow1">
+                  <object class="GtkScrolledWindow" id="scrolledwindow_status">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="border_width">5</property>
@@ -523,6 +523,7 @@
                         <property name="can_focus">True</property>
                         <property name="resize_mode">immediate</property>
                         <property name="editable">False</property>
+                        <property name="cursor_visible">False</property>
                         <property name="buffer">textbuffer_status</property>
                       </object>
                     </child>
