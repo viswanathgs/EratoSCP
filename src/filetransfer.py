@@ -57,7 +57,7 @@ class FileCopier:
 			self.copychild.sendline(password)
 
 		self.copychild.expect(pexpect.EOF, timeout=None)
-		print self.copychild.before
+		return self.copychild.before
 
 	def __init__(self):
 		self.copychild = None

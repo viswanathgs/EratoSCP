@@ -6,14 +6,32 @@ import validate
 import filetransfer
 import threading
 import gobject
+import aboutdialog
 
 class EratoSCP:
+
+	def set_initiate_copy_button_sensitive(self):		
+		gobject.idle_add(self.initiate_copy_button.set_label, 'Initiate Copy')
+		gobject.idle_add(self.initiate_copy_button.set_sensitive, True)
+
+	def update_status(self, status):
+		gobject.idle_add(self.textbuffer_status.insert_at_cursor, status + '\n')
+		
+#		end_iter = self.textbuffer_status.get_end_iter()
+#		gobject.idle_add(self.textbuffer_status.place_cursor, end_iter)
 	
 	def on_mainwindow_destroy(self, widget, data=None):
 		gtk.main_quit()
 
 	def on_button_quit_erato_clicked(self, data=None):
 		gtk.main_quit()
+
+	def on_button_about_erato_clicked(self, data=None):
+		self.about_dialog = aboutdialog.AboutDialog()
+		response = self.about_dialog.dialog.run()
+
+		if response == gtk.RESPONSE_CANCEL:
+			self.about_dialog.dialog.destroy()
 
 	def on_button_abort_copy_clicked(self, date=None):
 		print 'Abort copy clicked'
@@ -52,10 +70,12 @@ class EratoSCP:
 		'''
 			Checks for validity of host, port, username, password, source and
 			destination paths, and then initiates copy.
-			To be called in a separate thread so as to not hang GUI gtk main 
-			loop.
+			To be called in a separate thread so as to prevent GUI hangs in 
+			gtk main loop.
 		'''
-		
+
+		self.update_status('')
+		self.update_status('Performing checks...')
 		host = self.entry_host.get_text()
 		port = self.entry_port.get_text()
 		username = self.entry_username.get_text()
@@ -64,6 +84,9 @@ class EratoSCP:
 		(port, valid_port) = validate.validate_port(port)
 		if not valid_port:
 			print 'Error: Invalid port'
+			self.update_status('Error: Invalid port')
+			self.update_status('Transfer aborted.')
+			self.set_initiate_copy_button_sensitive()
 			return
 		
 		local_path = self.entry_local_path.get_text()
@@ -78,22 +101,32 @@ class EratoSCP:
 			remote_path = remote_path[:-1]
 
 		print 'Validating local path...'
+		self.update_status('Validating local path...')
 		(valid_path_local, directory_local) = validate.validate_local(local_path)
 
 		if not valid_path_local:
 			print 'Error: Local path does not exist'
+			self.update_status('Error: Local path does not exist')
+			self.update_status('Transfer aborted.')
+			self.set_initiate_copy_button_sensitive()
 			return
 
 		print 'Establishing connection and validating remote path...'
+		self.update_status('Establishing connection and validating remote path...')
 		(connection_error, valid_path_remote, directory_remote) = validate.validate_remote(remote_path, host, port, username, password)
 
 		if connection_error:
-			print 'Error: ',
-			print connection_error
+			print 'Error: ' + str(connection_error)
+			self.update_status('Error: ' + str(connection_error))
+			self.update_status('Transfer aborted.')
+			self.set_initiate_copy_button_sensitive()
 			return
 
 		if not valid_path_remote:
 			print 'Error: Remote path does not exist'
+			self.update_status('Error: Remote path does not exist')
+			self.update_status('Transfer aborted.')
+			self.set_initiate_copy_button_sensitive()
 			return
 
 		if source_remote:
@@ -102,6 +135,9 @@ class EratoSCP:
 			copy_entire_directory = directory_remote
 			if not directory_local:
 				print 'Error: Destination path is not a directory'
+				self.update_status('Error: Destination path is not a directory')
+				self.update_status('Transfer aborted.')
+				self.set_initiate_copy_button_sensitive()
 				return
 		else:
 			source_path = local_path
@@ -109,15 +145,21 @@ class EratoSCP:
 			copy_entire_directory = directory_local
 			if not directory_remote:
 				print 'Error: Destination path is not a directory'
+				self.update_status('Error: Destination path is not a directory')
+				self.update_status('Transfer aborted.')
+				self.set_initiate_copy_button_sensitive()
 				return
 
-		self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory)
-		gobject.idle_add(self.initiate_copy_button.set_label, "Initiate Copy")
-		gobject.idle_add(self.initiate_copy_button.set_sensitive, True)
+		self.update_status('Copying files...')
 		
-	def set_button_sensitivity(self, initiate_copy_button, abort_copy_button, copy_in_progress):
-		initiate_copy_button.set_sensitive(copy_in_progress)
-		abort_copy_button.set_sensitive(not copy_in_progress)
+		output = self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory)
+		
+		self.update_status('Output:')
+		self.update_status(output)
+		self.update_status('Transfer Complete.')
+		print output
+
+		self.set_initiate_copy_button_sensitive()
 		
 	def __init__(self):
 		self.builder = gtk.Builder()
@@ -137,9 +179,12 @@ class EratoSCP:
 		self.initiate_copy_button = self.builder.get_object('button_initiate_copy')
 		self.abort_copy_button = self.builder.get_object('button_abort_copy')
 		self.local_file_chooser = self.builder.get_object('filechooserwidget_local')
+		self.textview_status = self.builder.get_object('textview_status')
+		self.textbuffer_status = self.builder.get_object('textbuffer_status')
 
 		self.filecopier = filetransfer.FileCopier()
 
 		self.copythread = None
+		self.about_dialog = None
 		
 		self.builder.connect_signals(self)
