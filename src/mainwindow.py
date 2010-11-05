@@ -80,7 +80,30 @@ class EratoSCP:
 		port = self.entry_port.get_text()
 		username = self.entry_username.get_text()
 		password = self.entry_password.get_text()
-		
+
+		local_path = self.entry_local_path.get_text()
+		remote_path = self.entry_remote_path.get_text()
+		source_remote = self.radio_source.get_active()
+
+		blank_entry = False
+		if not host:
+			self.update_status('Error: Host is not entered')
+			blank_entry = True
+		if not username:
+			self.update_status('Error: Username is not entered')
+			blank_entry = True
+		if not local_path:
+			self.update_status('Error: Local path is not entered')
+			blank_entry = True
+		if not remote_path:
+			self.update_status('Error: Remote path is not entered')
+			blank_entry = True
+
+		if blank_entry:
+			self.update_status('Transfer aborted.')
+			self.set_initiate_copy_button_sensitive()
+			return
+			
 		(port, valid_port) = validate.validate_port(port)
 		if not valid_port:
 			print 'Error: Invalid port'
@@ -88,10 +111,6 @@ class EratoSCP:
 			self.update_status('Transfer aborted.')
 			self.set_initiate_copy_button_sensitive()
 			return
-		
-		local_path = self.entry_local_path.get_text()
-		remote_path = self.entry_remote_path.get_text()
-		source_remote = self.radio_source.get_active()
 
 #		Removing '/' at the end of the path to avoid os.path.basename() from
 #		returning empty string
