@@ -11,26 +11,34 @@ class RemoteMounter:
 		if self.is_mounted:
 			self.unmount_remote()
 
-		(status, local_username) = commands.getstatusoutput('whoami')
 		self.mount_remote(host, port, username, password)
 
-		remote_uri = 'file:///home/' + local_username + '/.gvfs/sftp\ for\ ' + username + '\ on\ ' + host + '/home/' + username
-		gobject.idle_add(self.remote_file_chooser.set_current_folder_uri, remote_uri)
+		remote_uri = 'file:///home/' + self.local_username + '/.gvfs/'
+		self.remote_file_chooser.set_current_folder_uri(remote_uri)
+#		gobject.idle_add(self.remote_file_chooser.set_uri, remote_uri)
 
 	def unmount_remote(self):
 		if self.is_mounted:
 			(status, output) = commands.getstatusoutput('gvfs-mount -u sftp://' + self.last_mount)
 			self.is_mounted = False
 		gobject.idle_add(self.remote_file_chooser.set_sensitive, False)
+
+	def already_mounted(self, host, username):
+		(status, output) = commands.getstatusoutput('ls /home/' + self.local_username + '/.gvfs/')
+		if output.find('sftp for ' + username + ' on ' + host) != -1:
+			return True
+		return False
 		
 	def mount_remote(self, host, port, username, password):
 		if port == '':
 			port = 22
 		remote = username + '@' + host + ':' + str(port)
-		child = pexpect.spawn('gvfs-mount sftp://' + remote)
-		child.expect('Password:\s*')
-		child.sendline(password)
-		child.expect(pexpect.EOF)
+
+		if not self.already_mounted(host, username):
+			child = pexpect.spawn('gvfs-mount sftp://' + remote)
+			child.expect('Password:\s*')
+			child.sendline(password)
+			child.expect(pexpect.EOF)
 
 		self.is_mounted = True
 		self.last_mount = remote
@@ -40,3 +48,4 @@ class RemoteMounter:
 		self.remote_file_chooser = remote_file_chooser
 		self.is_mounted = False
 		self.last_mount = ''
+		(status, self.local_username) = commands.getstatusoutput('whoami')

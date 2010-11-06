@@ -118,8 +118,13 @@ class EratoSCP:
 			Update the remote path entry box as per the changes
 			in remote file chooser
 		'''
+
+		if not self.remote_file_chooser.get_sensitive():
+			return
 		
 		remote_uri = self.remote_file_chooser.get_uri()
+
+		print remote_uri
 
 		if remote_uri == None:
 			return
@@ -127,6 +132,11 @@ class EratoSCP:
 #		To remove the preceeding file:// in remote_uri
 		if remote_uri.find('file://') == 0:
 			remote_uri = remote_uri[7:]
+		if remote_uri.find('gvfs') != -1 and remote_uri.find('sftp') != -1:
+			remote_uri_list = remote_uri.split('/')
+			remote_uri = '/'
+			if len(remote_uri_list) > 5:
+				remote_uri += '/'.join(remote_uri_list[5:])
 		self.entry_remote_path.set_text(remote_uri)			
 
 	def on_button_initiate_copy_clicked(self, date=None):

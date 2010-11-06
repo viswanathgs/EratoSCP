@@ -224,6 +224,7 @@
                 <child>
                   <object class="GtkButton" id="button_login">
                     <property name="label" translatable="yes">Login</property>
+                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="border_width">5</property>
@@ -374,6 +375,8 @@
                 </child>
                 <child>
                   <object class="GtkFileChooserWidget" id="filechooserwidget_remote">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <signal name="selection_changed" handler="on_filechooserwidget_remote_selection_changed"/>
                   </object>
                   <packing>
