@@ -31,7 +31,7 @@ class OptionsDialog:
 		self.checkbutton_compression = self.builder.get_object('checkbutton_compression')
 		self.checkbutton_preserve = self.builder.get_object('checkbutton_preserve')
 		self.entry_limit = self.builder.get_object('entry_limit')
-		
+
 		self.compression = False
 		self.preserve = False
 		self.limit = -1

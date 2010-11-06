@@ -249,7 +249,7 @@ class EratoSCP:
 
 		self.update_status('Copying files...')
 		
-		output = self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory)
+		output = self.filecopier.initiate_copy(host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory, self.options_dialog.compression, self.options_dialog.preserve, self.options_dialog.limit)
 		
 		self.update_status('Output:')
 		self.update_status(output)

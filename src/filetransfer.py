@@ -3,11 +3,10 @@ import commands
 import pexpect
 import os
 import validate
-import optionsdialog
 
 class FileCopier:
 	
-	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory):
+	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory, compression, preserve, limit):
 		login = username + '@' + host + ':'
 		source = source_path
 		destination = destination_path
@@ -23,12 +22,12 @@ class FileCopier:
 			options += '-P 22 '
 		if copy_entire_directory:
 			options += '-r '
-		if optionsdialog.compression:
+		if compression:
 			options += '-C '
-		if optionsdialog.preserve:
+		if preserve:
 			options += '-p '
-		if int(optionsdialog.limit) != -1:
-			options += '-l ' + optionsdialog.limit + ' '
+		if int(limit) != -1:
+			options += '-l ' + str(limit) + ' '
 		
 ##		Running scp command with subprocess module
 
