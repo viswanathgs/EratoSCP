@@ -11,142 +11,6 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkMenuBar" id="mainwindow_menubar">
-            <child>
-              <object class="GtkMenuItem" id="menuitem1">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_File</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu1">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem1">
-                        <property name="label">gtk-new</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem2">
-                        <property name="label">gtk-open</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem3">
-                        <property name="label">gtk-save</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem4">
-                        <property name="label">gtk-save-as</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem5">
-                        <property name="label">gtk-quit</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem2">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Edit</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu2">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem6">
-                        <property name="label">gtk-cut</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem7">
-                        <property name="label">gtk-copy</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem8">
-                        <property name="label">gtk-paste</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem9">
-                        <property name="label">gtk-delete</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem3">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_View</property>
-                <property name="use_underline">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem4">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Help</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu3">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem10">
-                        <property name="label">gtk-about</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
@@ -182,7 +46,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">5</property>
+                    <property name="padding">3</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -214,7 +78,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">5</property>
+                    <property name="padding">3</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -245,7 +109,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">5</property>
+                    <property name="padding">3</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -277,7 +141,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">5</property>
+                    <property name="padding">3</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -333,7 +197,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">5</property>
+                    <property name="padding">3</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -354,19 +218,62 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkHBox" id="hbox7">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkButton" id="button_login">
+                    <property name="label" translatable="yes">Login</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="border_width">5</property>
+                    <signal name="clicked" handler="on_button_login_clicked"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">5</property>
+                    <property name="pack_type">end</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_options">
+                    <property name="label" translatable="yes">Options</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="border_width">5</property>
+                    <signal name="clicked" handler="on_button_options_clicked"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">5</property>
+                    <property name="pack_type">end</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="padding">5</property>
-            <property name="position">1</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-            <property name="border_width">10</property>
-            <property name="spacing">15</property>
+            <property name="border_width">5</property>
+            <property name="spacing">7</property>
             <child>
               <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
@@ -432,6 +339,7 @@
             <child>
               <object class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkHBox" id="hbox3">
@@ -467,7 +375,14 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkFileChooserWidget" id="filechooserwidget_remote">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <signal name="selection_changed" handler="on_filechooserwidget_remote_selection_changed"/>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -476,8 +391,8 @@
             </child>
           </object>
           <packing>
-            <property name="padding">15</property>
-            <property name="position">2</property>
+            <property name="padding">3</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -488,7 +403,7 @@
               <object class="GtkVBox" id="vbox6">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">5</property>
+                <property name="spacing">3</property>
                 <child>
                   <object class="GtkHSeparator" id="hseparator1">
                     <property name="visible">True</property>
@@ -544,7 +459,7 @@
                 </child>
               </object>
               <packing>
-                <property name="padding">5</property>
+                <property name="padding">3</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -560,13 +475,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">10</property>
+                        <property name="border_width">5</property>
                         <signal name="clicked" handler="on_button_initiate_copy_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="padding">10</property>
+                        <property name="padding">5</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -575,13 +490,13 @@
                         <property name="label" translatable="yes">Abort Copy</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">10</property>
+                        <property name="border_width">5</property>
                         <signal name="clicked" handler="on_button_abort_copy_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="padding">10</property>
+                        <property name="padding">5</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -594,28 +509,19 @@
                   <object class="GtkHBox" id="hbox5">
                     <property name="visible">True</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
                       <object class="GtkButton" id="button_about_erato">
                         <property name="label" translatable="yes">About EratoSCP</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">10</property>
+                        <property name="border_width">5</property>
                         <signal name="clicked" handler="on_button_about_erato_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="padding">10</property>
-                        <property name="position">3</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -624,15 +530,15 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">10</property>
+                        <property name="border_width">5</property>
                         <signal name="clicked" handler="on_button_quit_erato_clicked"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="padding">10</property>
+                        <property name="padding">5</property>
                         <property name="pack_type">end</property>
-                        <property name="position">4</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -652,7 +558,7 @@
             </child>
           </object>
           <packing>
-            <property name="position">3</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

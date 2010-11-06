@@ -7,12 +7,17 @@ import filetransfer
 import threading
 import gobject
 import aboutdialog
+import mountremote
 
 class EratoSCP:
 
 	def set_initiate_copy_button_sensitive(self):		
 		gobject.idle_add(self.initiate_copy_button.set_label, 'Initiate Copy')
 		gobject.idle_add(self.initiate_copy_button.set_sensitive, True)
+
+	def set_login_button_sensitive(self):
+		gobject.idle_add(self.login_button.set_label, 'Login')
+		gobject.idle_add(self.login_button.set_sensitive, True)
 
 	def update_status(self, status):
 		gobject.idle_add(self.textbuffer_status.insert_at_cursor, status + '\n')
@@ -23,10 +28,61 @@ class EratoSCP:
 		gobject.idle_add(self.scrolledwindow_status.set_vadjustment, vadjustment)
 	
 	def on_mainwindow_destroy(self, widget, data=None):
+		self.remotemounter.unmount_remote()
 		gtk.main_quit()
 
 	def on_button_quit_erato_clicked(self, data=None):
+		self.remotemounter.unmount_remote()
 		gtk.main_quit()
+
+	def on_button_login_clicked(self, data=None):
+		self.login_button.set_sensitive(False)
+		self.login_button.set_label('Logging in...')
+		self.loginthread = threading.Thread(target=self.login)
+		self.loginthread.start()
+		
+	def login(self):
+		self.remotemounter.unmount_remote()
+		
+		host = self.entry_host.get_text()
+		port = self.entry_port.get_text()
+		username = self.entry_username.get_text()
+		password = self.entry_password.get_text()
+
+		blank_entry = False
+		if not host:
+			self.update_status('Error: Host is not entered')
+			blank_entry = True
+		if not username:
+			self.update_status('Error: Username is not entered')
+			blank_entry = True		
+
+		if blank_entry:
+			self.update_status('Login aborted.')
+			self.set_login_button_sensitive()
+			return
+
+		(port, valid_port) = validate.validate_port(port)
+		if not valid_port:
+			self.update_status('Error: Invalid port')
+			self.update_status('Login aborted.')
+			self.set_login_button_sensitive()
+			return
+
+		self.update_status('Performing connection checks...')
+		(ssh, connection_error) = validate.establish_connection(host, port, username, password)
+		if connection_error:
+			self.update_status('Error: ' + str(connection_error))
+			self.update_status('Login aborted.')
+			self.set_login_button_sensitive()
+			return
+		else:
+			ssh.close()
+
+		self.update_status('Logging into remote host...')
+		self.remotemounter.login_remote(host, port, username, password)	
+		self.update_status('Login successful.')
+		self.set_login_button_sensitive()
 
 	def on_button_about_erato_clicked(self, data=None):
 		self.about_dialog = aboutdialog.AboutDialog()
@@ -43,8 +99,8 @@ class EratoSCP:
 		
 	def on_filechooserwidget_local_selection_changed(self, date=None):
 		'''
-			Update the host path entry box as per the changes
-			in host file chooser
+			Update the local path entry box as per the changes
+			in local file chooser
 		'''
 		
 		local_uri = self.local_file_chooser.get_uri()
@@ -52,10 +108,26 @@ class EratoSCP:
 		if local_uri == None:
 			return
 		
-#		To remove the preceeding file:// in host_uri
+#		To remove the preceeding file:// in local_uri
 		if local_uri.find('file://') == 0:
 			local_uri = local_uri[7:]
 		self.entry_local_path.set_text(local_uri)
+
+	def on_filechooserwidget_remote_selection_changed(self, date=None):
+		'''
+			Update the remote path entry box as per the changes
+			in remote file chooser
+		'''
+		
+		remote_uri = self.remote_file_chooser.get_uri()
+
+		if remote_uri == None:
+			return
+		
+#		To remove the preceeding file:// in remote_uri
+		if remote_uri.find('file://') == 0:
+			remote_uri = remote_uri[7:]
+		self.entry_remote_path.set_text(remote_uri)			
 
 	def on_button_initiate_copy_clicked(self, date=None):
 		'''
@@ -199,14 +271,19 @@ class EratoSCP:
 		
 		self.initiate_copy_button = self.builder.get_object('button_initiate_copy')
 		self.abort_copy_button = self.builder.get_object('button_abort_copy')
+		self.login_button = self.builder.get_object('button_login')
 		self.local_file_chooser = self.builder.get_object('filechooserwidget_local')
+		self.remote_file_chooser = self.builder.get_object('filechooserwidget_remote')
+		
 		self.textview_status = self.builder.get_object('textview_status')
 		self.textbuffer_status = self.builder.get_object('textbuffer_status')
 		self.scrolledwindow_status = self.builder.get_object('scrolledwindow_status')
 
 		self.filecopier = filetransfer.FileCopier()
+		self.remotemounter = mountremote.RemoteMounter(self.remote_file_chooser)
 
 		self.copythread = None
+		self.loginthread = None
 		self.about_dialog = None
 		
 		self.builder.connect_signals(self)
