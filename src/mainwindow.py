@@ -8,6 +8,7 @@ import threading
 import gobject
 import aboutdialog
 import mountremote
+import optionsdialog
 
 class EratoSCP:
 
@@ -84,6 +85,9 @@ class EratoSCP:
 		self.update_status('Login successful.')
 		self.set_login_button_sensitive()
 
+	def on_button_options_clicked(self, data=None):
+		self.options_dialog.run_options_dialog()
+		
 	def on_button_about_erato_clicked(self, data=None):
 		self.about_dialog = aboutdialog.AboutDialog()
 		response = self.about_dialog.dialog.run()
@@ -123,8 +127,6 @@ class EratoSCP:
 			return
 		
 		remote_uri = self.remote_file_chooser.get_uri()
-
-		print remote_uri
 
 		if remote_uri == None:
 			return
@@ -190,7 +192,6 @@ class EratoSCP:
 			
 		(port, valid_port) = validate.validate_port(port)
 		if not valid_port:
-			print 'Error: Invalid port'
 			self.update_status('Error: Invalid port')
 			self.update_status('Transfer aborted.')
 			self.set_initiate_copy_button_sensitive()
@@ -203,30 +204,25 @@ class EratoSCP:
 		if remote_path != '/' and remote_path != '~/' and remote_path[-1] == '/':
 			remote_path = remote_path[:-1]
 
-		print 'Validating local path...'
 		self.update_status('Validating local path...')
 		(valid_path_local, directory_local) = validate.validate_local(local_path)
 
 		if not valid_path_local:
-			print 'Error: Local path does not exist'
 			self.update_status('Error: Local path does not exist')
 			self.update_status('Transfer aborted.')
 			self.set_initiate_copy_button_sensitive()
 			return
 
-		print 'Establishing connection and validating remote path...'
 		self.update_status('Establishing connection and validating remote path...')
 		(connection_error, valid_path_remote, directory_remote) = validate.validate_remote(remote_path, host, port, username, password)
 
 		if connection_error:
-			print 'Error: ' + str(connection_error)
 			self.update_status('Error: ' + str(connection_error))
 			self.update_status('Transfer aborted.')
 			self.set_initiate_copy_button_sensitive()
 			return
 
 		if not valid_path_remote:
-			print 'Error: Remote path does not exist'
 			self.update_status('Error: Remote path does not exist')
 			self.update_status('Transfer aborted.')
 			self.set_initiate_copy_button_sensitive()
@@ -237,7 +233,6 @@ class EratoSCP:
 			destination_path = local_path
 			copy_entire_directory = directory_remote
 			if not directory_local:
-				print 'Error: Destination path is not a directory'
 				self.update_status('Error: Destination path is not a directory')
 				self.update_status('Transfer aborted.')
 				self.set_initiate_copy_button_sensitive()
@@ -247,7 +242,6 @@ class EratoSCP:
 			destination_path = remote_path
 			copy_entire_directory = directory_local
 			if not directory_remote:
-				print 'Error: Destination path is not a directory'
 				self.update_status('Error: Destination path is not a directory')
 				self.update_status('Transfer aborted.')
 				self.set_initiate_copy_button_sensitive()
@@ -260,7 +254,6 @@ class EratoSCP:
 		self.update_status('Output:')
 		self.update_status(output)
 		self.update_status('Transfer Complete.')
-		print output
 
 		self.set_initiate_copy_button_sensitive()
 		
@@ -295,5 +288,6 @@ class EratoSCP:
 		self.copythread = None
 		self.loginthread = None
 		self.about_dialog = None
+		self.options_dialog = optionsdialog.OptionsDialog()
 		
 		self.builder.connect_signals(self)

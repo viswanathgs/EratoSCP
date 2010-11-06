@@ -3,6 +3,7 @@ import commands
 import pexpect
 import os
 import validate
+import optionsdialog
 
 class FileCopier:
 	
@@ -20,27 +21,20 @@ class FileCopier:
 
 		if port != 22:
 			options += '-P 22 '
-
 		if copy_entire_directory:
 			options += '-r '
-			
+		if optionsdialog.compression:
+			options += '-C '
+		if optionsdialog.preserve:
+			options += '-p '
+		if int(optionsdialog.limit) != -1:
+			options += '-l ' + optionsdialog.limit + ' '
+		
 ##		Running scp command with subprocess module
 
 #		scp_command = ['scp', '-P', str(port), source, destination]
 #		print 'Executing "', ' '.join(scp_command), '"'
 #		scp_proc = subprocess.Popen(scp_command)
-
-##		Running scp command with commands module
-
-#		scp_command = 'scp -P ' + str(port) + ' ' + source + ' ' + destination
-#		print 'Executing "', scp_command, '"'
-#		(status, output) = commands.getstatusoutput(scp_command)
-
-#		if status:
-#			print 'Error copying file.'
-#		else:
-#			print 'Transfer complete.'
-#			print output
 	
 ##		Running scp command with pexpect module
 
