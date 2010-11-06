@@ -12,15 +12,30 @@ import optionsdialog
 
 class EratoSCP:
 
-	def set_initiate_copy_button_sensitive(self):		
+	def set_initiate_copy_button_sensitive(self):
+		'''
+			Enables the senstivity of Initiate Copy button, and changes 
+			the label back to default.
+		'''
+		
 		gobject.idle_add(self.initiate_copy_button.set_label, 'Initiate Copy')
 		gobject.idle_add(self.initiate_copy_button.set_sensitive, True)
 
 	def set_login_button_sensitive(self):
+		'''
+			Enables the senstivity of Login button, and changes 
+			the label back to default.
+		'''
+		
 		gobject.idle_add(self.login_button.set_label, 'Login')
 		gobject.idle_add(self.login_button.set_sensitive, True)
 
 	def update_status(self, status):
+		'''
+			Inserts status into the status box buffer, and scrolls the status
+			box to the end.
+		'''
+		
 		gobject.idle_add(self.textbuffer_status.insert_at_cursor, status + '\n')
 
 #		Scroll to the end of status box text view
@@ -29,20 +44,42 @@ class EratoSCP:
 		gobject.idle_add(self.scrolledwindow_status.set_vadjustment, vadjustment)
 	
 	def on_mainwindow_destroy(self, widget, data=None):
+		'''
+			Callback function for the application's destroy signal.
+			Unmounts any mounted remote file system, and exits the application.
+		'''
+		
 		self.remotemounter.unmount_remote()
 		gtk.main_quit()
 
 	def on_button_quit_erato_clicked(self, data=None):
+		'''
+			Callback function for Quit EratoSCP button's clicked signal.
+			Unmounts any mounted remote file system, and exits the application.
+		'''
+		
 		self.remotemounter.unmount_remote()
 		gtk.main_quit()
 
 	def on_button_login_clicked(self, data=None):
+		'''
+			Callback function for login button's clicked signal.
+			Sets the login buttion insensitive and changes the label.
+			Initiates the login process in a separate thread.
+		'''
+		
 		self.login_button.set_sensitive(False)
 		self.login_button.set_label('Logging in...')
 		self.loginthread = threading.Thread(target=self.login)
 		self.loginthread.start()
 		
 	def login(self):
+		'''
+			Checks if connection could be established with the remote host, 
+			mounts the remote file system, and update the remote file chooser
+			widget.
+		'''
+		
 		self.remotemounter.unmount_remote()
 		
 		host = self.entry_host.get_text()
@@ -86,9 +123,19 @@ class EratoSCP:
 		self.set_login_button_sensitive()
 
 	def on_button_options_clicked(self, data=None):
+		'''
+			Callback function for Options button's clicked signal.
+			Displays the options dialog box.
+		'''
+		
 		self.options_dialog.run_options_dialog()
 		
 	def on_button_about_erato_clicked(self, data=None):
+		'''
+			Callback function for About EratoSCP button's clicked signal.
+			Display the about dialog box.
+		'''
+		
 		self.about_dialog = aboutdialog.AboutDialog()
 		response = self.about_dialog.dialog.run()
 

@@ -7,6 +7,11 @@ import validate
 class FileCopier:
 	
 	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory, compression, preserve, limit):
+		'''
+			Does the actual file transfer.
+			Spawns a pexpect child process for scp.
+		'''
+		
 		login = username + '@' + host + ':'
 		source = source_path
 		destination = destination_path

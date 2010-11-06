@@ -4,6 +4,10 @@ import pygtk
 class OptionsDialog:
 	
 	def run_options_dialog(self):
+		'''
+			Display the options dialog box and update the values for options.
+		'''
+		
 		self.checkbutton_compression.set_active(self.compression)
 		self.checkbutton_preserve.set_active(self.preserve)
 		self.entry_limit.set_text(str(self.limit))
