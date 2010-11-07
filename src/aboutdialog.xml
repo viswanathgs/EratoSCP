@@ -34,8 +34,8 @@ with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 </property>
     <property name="authors">Viswanath S (106108011)
 Sriram G (106108030)</property>
-    <property name="documenters">Viswanath S (106108011)
-Sriram G (106108030)</property>
+    <property name="documenters">Sriram G (106108030)
+Viswanath S (106108011)</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
