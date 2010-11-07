@@ -24,7 +24,7 @@ class OptionsDialog:
 			else:
 				self.limit = -1
 		
-			self.dialog.hide()
+		self.dialog.hide()
 		
 		
 	def __init__(self):
