@@ -9,8 +9,10 @@ class RemoteMounter:
 
 	def login_remote(self, host, port, username, password):
 		'''
-			Mounts the remote file system and updates the remote file
+			Mount the remote file system and update the remote file
 			chooser to the corresponding location.
+			Any remote filesystem, previously mounted by the application,
+			is first unmounted.
 		'''
 		
 		if self.is_mounted:
@@ -24,8 +26,8 @@ class RemoteMounter:
 
 	def unmount_remote(self):
 		'''
-			Unmounts a previously mounted remote file system.
-			Also, sets the remote file chooser widget insensitive.
+			Unmount a previously mounted remote file system.
+			Also, set the remote file chooser widget insensitive.
 		'''
 		
 		if self.is_mounted:
@@ -35,8 +37,8 @@ class RemoteMounter:
 
 	def already_mounted(self, host, username):
 		'''
-			Returs True if the remote filesystem has already been mounted, else
-			returns False.
+			Return True if the remote filesystem has already been mounted, 
+			else return False.
 		'''
 		
 		(status, output) = commands.getstatusoutput('ls /home/' + self.local_username + '/.gvfs/')
@@ -46,8 +48,8 @@ class RemoteMounter:
 		
 	def mount_remote(self, host, port, username, password):
 		'''
-			Mounts the remote filesystem.
-			Also, sets the remote file chooser widget sensitive.
+			Mount the remote filesystem if it is not mounted already.
+			Also, set the remote file chooser widget sensitive.
 		'''
 		
 		if port == '':
@@ -65,6 +67,14 @@ class RemoteMounter:
 		gobject.idle_add(self.remote_file_chooser.set_sensitive, True)
 		
 	def __init__(self, remote_file_chooser):
+		'''
+			Constructor. Assign a data member of point to the remote
+			file chooser widget. 
+			Initialize data members related to previous mounts 
+			to their defaults.
+			Obtain the name of the local user.
+		'''
+		
 		self.remote_file_chooser = remote_file_chooser
 		self.is_mounted = False
 		self.last_mount = ''

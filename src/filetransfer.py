@@ -8,8 +8,10 @@ class FileCopier:
 	
 	def initiate_copy(self, host, port, username, password, source_path, destination_path, source_remote, copy_entire_directory, compression, preserve, limit):
 		'''
-			Does the actual file transfer.
-			Spawns a pexpect child process for scp.
+			Perform the actual file transfer.
+			Construct the scp command from the username, host, source path,
+			destination path and the options.
+			Spawn a pexpect child process for scp without any timeout.
 		'''
 		
 		login = username + '@' + host + ':'
@@ -58,5 +60,9 @@ class FileCopier:
 		return self.copychild.before
 
 	def __init__(self):
+		'''
+			Constructor. Initialize the child process data member to None.
+		'''
+		
 		self.copychild = None
 	

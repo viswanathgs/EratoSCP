@@ -5,7 +5,10 @@ class OptionsDialog:
 	
 	def run_options_dialog(self):
 		'''
-			Display the options dialog box and update the values for options.
+			Run the options dialog box and obtain the response.
+			If response == OK, then, change the values of the options
+			accordingly.
+			Hide the dialog box.
 		'''
 		
 		self.checkbutton_compression.set_active(self.compression)
@@ -28,6 +31,12 @@ class OptionsDialog:
 		
 		
 	def __init__(self):
+		'''
+			Constructor. Parse optionsdialog.xml using GtkBuilder
+			and assign data members to point to its widgets.
+			Initialize the values of options to default.
+		'''
+		
 		self.builder = gtk.Builder()
 		self.builder.add_from_file('optionsdialog.xml')
 

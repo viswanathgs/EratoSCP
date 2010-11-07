@@ -14,8 +14,8 @@ class EratoSCP:
 
 	def set_initiate_copy_button_sensitive(self):
 		'''
-			Enables the senstivity of Initiate Copy button, and changes 
-			the label back to default.
+			Enable the senstivity of Initiate Copy button, and change 
+			its label back to default.
 		'''
 		
 		gobject.idle_add(self.initiate_copy_button.set_label, 'Initiate Copy')
@@ -23,8 +23,8 @@ class EratoSCP:
 
 	def set_login_button_sensitive(self):
 		'''
-			Enables the senstivity of Login button, and changes 
-			the label back to default.
+			Enable the senstivity of Login button, and change
+			its label back to default.
 		'''
 		
 		gobject.idle_add(self.login_button.set_label, 'Login')
@@ -32,8 +32,8 @@ class EratoSCP:
 
 	def update_status(self, status):
 		'''
-			Inserts status into the status box buffer, and scrolls the status
-			box to the end.
+			Insert status into the status box buffer, and scroll the status
+			box to the bottom.
 		'''
 		
 		gobject.idle_add(self.textbuffer_status.insert_at_cursor, status + '\n')
@@ -45,8 +45,8 @@ class EratoSCP:
 	
 	def on_mainwindow_destroy(self, widget, data=None):
 		'''
-			Callback function for the application's destroy signal.
-			Unmounts any mounted remote file system, and exits the application.
+			Callback function for the main window's destroy signal.
+			Unmount any mounted remote file system, and quit the application.
 		'''
 		
 		self.remotemounter.unmount_remote()
@@ -55,7 +55,7 @@ class EratoSCP:
 	def on_button_quit_erato_clicked(self, data=None):
 		'''
 			Callback function for Quit EratoSCP button's clicked signal.
-			Unmounts any mounted remote file system, and exits the application.
+			Unmount any mounted remote file system, and quit the application.
 		'''
 		
 		self.remotemounter.unmount_remote()
@@ -64,8 +64,10 @@ class EratoSCP:
 	def on_button_login_clicked(self, data=None):
 		'''
 			Callback function for login button's clicked signal.
-			Sets the login buttion insensitive and changes the label.
-			Initiates the login process in a separate thread.
+			Make the login buttion insensitive and change the label.
+			Initiate the login process in a separate thread. When not called
+			in a separate thread, would result in GUI freeze, as the gtk main 
+			loop would wait for the child process to get over.
 		'''
 		
 		self.login_button.set_sensitive(False)
@@ -75,9 +77,10 @@ class EratoSCP:
 		
 	def login(self):
 		'''
-			Checks if connection could be established with the remote host, 
-			mounts the remote file system, and update the remote file chooser
-			widget.
+			Check if SSH connection could be established with the remote host, 
+			mount the remote file system, and set the current folder of the
+			remote file chooser as the location where the remote filesystem is
+			mounted.
 		'''
 		
 		self.remotemounter.unmount_remote()
@@ -125,7 +128,7 @@ class EratoSCP:
 	def on_button_options_clicked(self, data=None):
 		'''
 			Callback function for Options button's clicked signal.
-			Displays the options dialog box.
+			Run the options dialog box.
 		'''
 		
 		self.options_dialog.run_options_dialog()
@@ -133,7 +136,7 @@ class EratoSCP:
 	def on_button_about_erato_clicked(self, data=None):
 		'''
 			Callback function for About EratoSCP button's clicked signal.
-			Display the about dialog box.
+			Run the about dialog box.
 		'''
 		
 		self.about_dialog = aboutdialog.AboutDialog()
@@ -151,7 +154,7 @@ class EratoSCP:
 	def on_filechooserwidget_local_selection_changed(self, date=None):
 		'''
 			Update the local path entry box as per the changes
-			in local file chooser
+			in the local file chooser widget.
 		'''
 		
 		local_uri = self.local_file_chooser.get_uri()
@@ -167,7 +170,7 @@ class EratoSCP:
 	def on_filechooserwidget_remote_selection_changed(self, date=None):
 		'''
 			Update the remote path entry box as per the changes
-			in remote file chooser
+			in the remote file chooser widget.
 		'''
 
 		if not self.remote_file_chooser.get_sensitive():
@@ -190,8 +193,10 @@ class EratoSCP:
 
 	def on_button_initiate_copy_clicked(self, date=None):
 		'''
-			Calls initiate_copy() in a separate thread when "Initiate Copy" is
-			clicked.
+			Callback function for the Initiate Copy button's clicked signal. 
+			Set the button insensitive and modify its label.
+			Call the function initiate_copy() in a separate thread to 
+			prevent the GUI from freezing.
 		'''
 		
 		self.initiate_copy_button.set_sensitive(False)
@@ -201,10 +206,10 @@ class EratoSCP:
 		
 	def initiate_copy(self):	
 		'''
-			Checks for validity of host, port, username, password, source and
-			destination paths, and then initiates copy.
-			To be called in a separate thread so as to prevent GUI hangs in 
-			gtk main loop.
+			Check for validity of host, port, username, password, source and
+			destination paths and update status and error messages.
+			Perform file transfer using the filetransfer module.
+			Make the Initiate Copy button sensitive once complete.
 		'''
 
 		self.update_status('')
@@ -305,6 +310,11 @@ class EratoSCP:
 		self.set_initiate_copy_button_sensitive()
 		
 	def __init__(self):
+		'''
+			Constructor. Parse mainwindow.xml using GtkBuilder and assign
+			data members to point to the widgets.
+		'''
+		
 		self.builder = gtk.Builder()
 		self.builder.add_from_file('mainwindow.xml')
 		

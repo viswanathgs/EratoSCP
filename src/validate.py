@@ -5,7 +5,7 @@ import paramiko
 
 def validate_port(port):
 	'''
-		Returns (port_number in int, True) if the entered port is valid.
+		Return (port_number in int, True) if the entered port is valid.
 	'''
 	
 	valid_port = True
@@ -19,7 +19,7 @@ def validate_port(port):
 
 def validate_local(path):
 	'''
-		Returns a tuple (valid_path, directory).
+		Return a tuple (valid_path, directory).
 		valid_path = True, if the local path exists.
 		directory = True, if the path is a directory.
 	'''
@@ -55,6 +55,13 @@ def validate_local(path):
 	return (valid_path, directory)
 
 def establish_connection(host, port, username, password):
+	'''
+		Return (ssh, connection_error).
+		ssh = An instance of the SSH client connection.
+		connection_error = '', if an SSH connection is successfully established.
+		connection_error = <Error Message>, if it could not be established.
+	'''
+	
 	ssh = paramiko.SSHClient()
 	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -70,9 +77,9 @@ def establish_connection(host, port, username, password):
 
 def validate_remote(path, host, port, username, password):
 	'''
-		Returns a tuple(connection_error, valid_path, directory).
-		connection_error = '', if ssh connection is successfully established.
-		connection_error = <Error Message>, if connection could not be established.
+		Return a tuple(connection_error, valid_path, directory).
+		connection_error = '', if an SSH connection is successfully established.
+		connection_error = <Error Message>, if it could not be established.
 		valid_path = True, if the remote path exists.
 		directory = True, if the path is a directory.
 	'''
